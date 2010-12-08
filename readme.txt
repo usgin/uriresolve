@@ -14,9 +14,4 @@ Steps:
 	This can be done through copy/paste or symlink.
 5. Add the following line to your patterns in your project's urls.py:
 	(r'^uri-gin/', include('uriresolve.urls')),
-6. (OPTIONAL) If you'd like to generate a site detailing all available redirections
-	add a URL pattern to your project's urls.py that calls uriresolve.views.index.
-	For example:
-	(r'^$', 'uriresolve.views.index'),
-	Would put the listing at your project's root - i.e. http://<hostname>/
-7. Run 'python manage.py syncdb'
+6. Run 'python manage.py syncdb'
