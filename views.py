@@ -6,7 +6,12 @@ from django.template import Context, loader
 from django.db.models import Q
 
 def index(request):
-    return HttpResponseRedirect("http://google.com")
+    # Show a listing of URIs available on this server
+    listing = redirection.objects.all()
+    return render_to_response(
+        'uriresolve/index.html',
+        { 'redirection_list': listing, }
+    )
     
 def resolver(request, given_uri):
     # return HttpResponse(given_uri)

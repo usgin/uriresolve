@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <title>Available Resources</title>
+  <meta name="robots" content="NONE,NOARCHIVE" />
+  <style type="text/css">
+    html * { padding:0; margin:0; }
+    body * { padding:10px 20px; }
+    body * * { padding:0; }
+    body { font:small sans-serif; background:#eee; }
+    body>div { border-bottom:1px solid #ddd; }
+    h1 { font-weight:normal; margin-bottom:.4em; }
+    h1 span { font-size:60%; color:#666; font-weight:normal; }
+    table { border:none; border-collapse: collapse; width:50%;}
+    td, th { vertical-align:top; padding:2px 3px; }
+    th { width:12em; text-align:right; color:#666; padding-right:.5em; }
+    .info { background:#f6f6f6; }
+    .info ol { margin: 0.5em 4em; }
+    .info ol li { font-family: monospace; }
+    #summary { background: #ffc; }
+    #explanation { background:#eee; border-bottom: 0px none; }
+  </style>
+</head>
+<body>
+  <div id="summary">
+    <h1>Available Resources</h1>
+  </div>
+  {% for given_uri in redirection_list %}
+  <div class="info">
+	<table>
+		<tr>
+			<th><strong>Resource Label:</strong></td>
+			<td><strong>{{ given_uri.label }}</strong></td>
+		</tr>		
+		<tr>
+			<th>Resource Description:</td>
+			<td>{{ given_uri.description }}</td>
+		</tr>
+		<tr>
+			<th>Resource URI:</td>
+			<td><a href="{{ given_uri.uri_string }}">{{ given_uri.uri_string }}</a></td>
+		</tr>
+		<tr>
+			<th>Resolve-To URL:</td>
+			<td><a href="{{ given_uri.url_string }}">{{ given_uri.url_string }}</a></td>
+		</tr>
+	</table>
+  </div>
+  {% endfor %}
+</body>
+</html>
