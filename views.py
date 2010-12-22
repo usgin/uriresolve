@@ -1,6 +1,6 @@
 from uriresolve.models import redirection
 from uriresolve.utils import HttpResponseSeeOtherRedirect
-from django.http import HttpResponseRedirect, HttpResponse, Http404
+from django.http import HttpResponseSeeOtherRedirect, HttpResponse, Http404
 from django.shortcuts import get_list_or_404, render_to_response
 from django.template import Context, loader
 from django.db.models import Q
@@ -14,8 +14,6 @@ def index(request):
     )
     
 def resolver(request, given_uri):
-    # return HttpResponse(given_uri)
-    
     # No matches, begin searching for a matching pattern
     elements = ('uri-gin/' + given_uri).split('/')
     components = len(elements)
@@ -40,11 +38,11 @@ def resolver(request, given_uri):
             )
         elif len(match) == 1 and i == 0:
             # The entire requested URI matches a redirect rule, easy return
-            return HttpResponseRedirect(match[0].url_string)
+            return HttpResponseSeeOtherRedirect(match[0].url_string)
             
         elif len(match) == 1 and i !=0:
             # Some of the requested URI matches a single redirect rule, try the redirect URL with additions
-            return HttpResponseRedirect(match[0].url_string + '/'.join(elements[components-i:]))
+            return HttpResponseSeeOtherRedirect(match[0].url_string + '/'.join(elements[components-i:]))
         
         #Otherwise, there were no matches. Iterate
     
@@ -52,9 +50,6 @@ def resolver(request, given_uri):
     raise Http404
                 
 def detail(request, given_uri):
-    # return HttpResponse(given_uri)
-    # return HttpResponse('Hello')
-    
     resolveme = get_list_or_404(redirection, Q(uri_string = '/uri-gin/' + given_uri) | Q(uri_string = '/uri-gin/' + given_uri + '/'))
     if len(resolveme) > 1:
         return render_to_response(
@@ -63,6 +58,3 @@ def detail(request, given_uri):
         )
     else:
         return render_to_response('uriresolve/detail.html', { 'given_uri': resolveme[0] })
-        
-def base_detail(request):
-    return HttpResponseSeeOtherRedirect('http://catalog.usgin.org')
