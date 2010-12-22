@@ -48,7 +48,7 @@ def resolver(request, given_uri):
                 
 def detail(request, given_uri):
     # return HttpResponse(given_uri)
-    return HttpResponse('Hello')
+    # return HttpResponse('Hello')
     
     resolveme = get_list_or_404(redirection, Q(uri_string = '/uri-gin/' + given_uri) | Q(uri_string = '/uri-gin/' + given_uri + '/'))
     if len(resolveme) > 1:
