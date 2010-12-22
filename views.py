@@ -1,6 +1,6 @@
 from uriresolve.models import redirection
 from uriresolve.utils import HttpResponseSeeOtherRedirect
-from django.http import HttpResponseSeeOtherRedirect, HttpResponse, Http404
+from django.http import HttpResponse, Http404
 from django.shortcuts import get_list_or_404, render_to_response
 from django.template import Context, loader
 from django.db.models import Q
