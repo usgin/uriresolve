@@ -26,8 +26,12 @@ class redirectionAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         uri_elements = []
         
-        uri_elements.append(obj.name_authority.name)
-        uri_elements.append(obj.resource_type.token)        
+        if obj.name_authority != None:
+            uri_elements.append(obj.name_authority.name)
+        
+        if obj.resource_type != None:
+            uri_elements.append(obj.resource_type.token)
+            
         if obj.resource_specific_string != '':
             uri_elements.append(obj.resource_specific_string)
             
@@ -37,7 +41,7 @@ class redirectionAdmin(admin.ModelAdmin):
         # Join the elements together, and append a / if there is no . in the string that means the URI points
         #  at an information resource (that is, at a file directly)
         s = '/uri-gin/' + '/'.join(uri_elements)
-        if s.find('.') == -1:
+        if s.find('.') == -1 and len(uri_elements) > 0:
             s += '/'
             
         obj.uri_string = s

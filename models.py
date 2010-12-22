@@ -29,7 +29,7 @@ class redirection(models.Model):
     
     description = models.TextField(
         blank=True, 
-        help_text='(Optional) Free-text description of this URI'
+        help_text='(Optional) Free-text description of this URI',
     )
 #---------------------------------------------------
 #---------------------------------------------------
@@ -37,7 +37,7 @@ class redirection(models.Model):
 #---------------------------------------------------
 # URI components
 #---------------------------------------------------    
-    name_authority = models.ForeignKey('name_authority')
+    name_authority = models.ForeignKey('name_authority', blank=True, null=True)
     
     # resource_type = models.CharField(
         # max_length=100,
@@ -49,7 +49,9 @@ class redirection(models.Model):
     resource_type = models.ForeignKey(
         'resource_type',
         verbose_name='Resource Type',
-        help_text='A token that indicates the resource type, taken from the register at http://resources.usgin.org/uri-gin/usgin/resourceType/'
+        help_text='A token that indicates the resource type, taken from the register at http://resources.usgin.org/uri-gin/usgin/resourceType/', 
+        blank=True, 
+        null=True
     )
         
     resource_specific_string = models.CharField(

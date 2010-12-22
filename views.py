@@ -49,7 +49,7 @@ def resolver(request, given_uri):
     #Should never get here. If you did, the code is flawed, but lets just 404
     raise Http404
                 
-def detail(request, given_uri):
+def detail(request, given_uri=''):
     resolveme = get_list_or_404(redirection, Q(uri_string = '/uri-gin/' + given_uri) | Q(uri_string = '/uri-gin/' + given_uri + '/'))
     if len(resolveme) > 1:
         return render_to_response(
@@ -57,4 +57,28 @@ def detail(request, given_uri):
             { 'requestedUri': '/uri-gin/' + given_uri, 'resources': resolveme, }
         )
     else:
-        return render_to_response('uriresolve/detail.html', { 'given_uri': resolveme[0] })
+        # There is a result. Build the breadcrumbs.
+        requested = resolveme[0].uri_string.split('/')
+        components = len(requested)
+        
+        # Setup string variables
+        breadcrumb = '/ '
+        uriPart = '/'
+        
+        # Iterate through each of the parts of the URI
+        for i in range(components):
+            # This IF catches the first and last parts of the split URI, which will be blank
+            if requested[i] == '':
+                continue
+            
+            # We append the new segment to the previous ones, and search for that URI
+            uriPart += requested[i] + '/'
+            match = redirection.objects.filter(uri_string=uriPart)
+            
+            # If a URI for this part has been created, link it, otherwise, just text.
+            if len(match) !=0:
+                breadcrumb += '<a href="' + uriPart + 'uridetail.html">' + requested[i] + '</a>' + ' / '
+            else:
+                breadcrumb += requested[i] + ' / '
+                
+        return render_to_response('uriresolve/detail.html', { 'given_uri': resolveme[0], 'breadcrumbs': breadcrumb })

@@ -14,7 +14,8 @@
 	<table>
 		<tr>
 			<th>Resource URI:</td>
-			<td><strong>{{ given_uri.uri_string }}</strong></td>
+			<!--<td><strong>{{ given_uri.uri_string }}</strong></td>-->
+			<td><strong>{{ breadcrumbs|safe }}</strong></td>
 		</tr>
 		<tr>
 			<th>Resource Label:</td>
@@ -22,11 +23,11 @@
 		</tr>
 		<tr>
 			<th>Resource Description:</td>
-			<td>{{ given_uri.description }}</td>
+			<td>{{ given_uri.description|safe }}</td>
 		</tr>
 		<tr>
 			<th>Resolve-To URL:</td>
-			<td>{{ given_uri.url_string }}</td>
+			<td><a href="{{ given_uri.url_string }}">{{ given_uri.url_string }}</a></td>
 		</tr>
 	</table>
   </div>
