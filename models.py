@@ -173,7 +173,7 @@ class name_authority(models.Model):
         
 class resource_type(models.Model):
     class Meta:
-        ordering = ['label']
+        ordering = ['label',]
         verbose_name = 'Resource Type'
         verbose_name_plural = 'Resource Types'
     

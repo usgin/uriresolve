@@ -47,7 +47,52 @@ class redirectionAdmin(admin.ModelAdmin):
         obj.uri_string = s
         obj.save()
 
+class nameAuthorityAdmin(admin.ModelAdmin):
+    fields = ('name',)
+    
+    def save_model(self, request, obj, form, change):
+        obj.name = obj.name.lower()
+        obj.save()
+        
+        # Need to create a redirection for this Name Authority
+        r = redirection(
+            label=obj.name.upper() + ' Name Authority', 
+            description='Default representation for the ' + obj.name.upper() + ' name authority.',
+            name_authority=obj,
+            uri_string='/uri-gin/' + obj.name + '/',
+            url_string='http://' + request.META['SERVER_NAME'] + '/uri-gin/' + obj.name + '/uridetail.html'
+        )
+        r.save()
+        
+        # Need to create a redirection for this Name Authority's resource types
+        r = redirection(
+            label=obj.name.upper() + ' Resource Types', 
+            description='Default representation for the resource type registry defined by the ' + obj.name.upper() + ' name authority.',
+            name_authority=obj,
+            uri_string='/uri-gin/' + obj.name + '/type/',
+            url_string='http://' + request.META['SERVER_NAME'] + '/uri-gin/' + obj.name + '/type/uridetail.html'
+        )
+        r.save()
+
+class resourceTypeAdmin(admin.ModelAdmin):
+    list_filter = ('name_authority',)
+    
+    fields = ('name_authority', 'label', 'description', 'token',)
+    
+    def save_model(self, request, obj, form, change):
+        obj.save()
+        
+        # Need to create a redirection for this resource type
+        r = redirection(
+            label='Resource Type: ' + obj.label + ' (' + obj.name_authority.name.upper() + ')',
+            description='Default representation for the ' + obj.label + ' resource type defined by the ' + obj.name_authority.name.upper() + ' name authority.',
+            name_authority=obj.name_authority,
+            uri_string='/uri-gin/' + obj.name_authority.name + '/type/' + obj.token + '/',
+            url_string='http://' + request.META['SERVER_NAME'] + '/uri-gin/' + obj.name_authority.name + '/type/' + obj.token + '/uridetail.html'
+        )
+        r.save()
+        
 admin.site.register(redirection, redirectionAdmin)
-admin.site.register(name_authority)
-admin.site.register(resource_type)
+admin.site.register(name_authority, nameAuthorityAdmin)
+admin.site.register(resource_type, resourceTypeAdmin)
 #admin.site.register(representation_type)
