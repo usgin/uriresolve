@@ -40,7 +40,7 @@
 		</tr>
 	{% for type in resource_types %}
 		<tr>
-			<td>{{ type.label }}</td>
+			<td><a href="/uri-gin/{{ type.name_authority.name }}/type/{{ type.token }}/">{{ type.label }}</a></td>
 			<td>{{ type.description }}</td>
 			<td>{{ type.token }}</td>
 		</tr>
