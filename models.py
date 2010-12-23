@@ -39,17 +39,10 @@ class redirection(models.Model):
 #---------------------------------------------------    
     name_authority = models.ForeignKey('name_authority', blank=True, null=True)
     
-    # resource_type = models.CharField(
-        # max_length=100,
-        # choices=RESOURCE_TYPE_CHOICES,
-        # verbose_name='Resource Type',
-        # help_text='A token that indicates the resource type, taken from the register at http://resources.usgin.org/uri-gin/usgin/resourceType/'
-        # )
-        
     resource_type = models.ForeignKey(
         'resource_type',
         verbose_name='Resource Type',
-        help_text='A token that indicates the resource type, taken from the register at http://resources.usgin.org/uri-gin/usgin/resourceType/', 
+        help_text='A token that indicates the resource type.', 
         blank=True, 
         null=True
     )
@@ -183,15 +176,20 @@ class resource_type(models.Model):
         ordering = ['label']
         verbose_name = 'Resource Type'
         verbose_name_plural = 'Resource Types'
-        
-    token = models.CharField(
-        max_length=100,
-        help_text='The token name will appear in URIs.'
+    
+    name_authority = models.ForeignKey(
+        'name_authority',
+        verbose_name = 'Name Authority'
     )
     
     label = models.CharField(
         max_length=100,
         help_text='A human-readable label for the resource type.'
+    )
+    
+    token = models.CharField(
+        max_length=100,
+        help_text='The token name will appear in URIs.'
     )
     
     description = models.TextField(
@@ -200,4 +198,4 @@ class resource_type(models.Model):
     )
     
     def __unicode__(self):
-        return self.label    
+        return self.name_authority.name + ': ' + self.label    
