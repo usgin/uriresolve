@@ -1,4 +1,4 @@
-from uriresolve.models import redirection
+from uriresolve.models import *
 from uriresolve.utils import HttpResponseSeeOtherRedirect
 from django.http import HttpResponse, Http404
 from django.shortcuts import get_list_or_404, render_to_response
@@ -80,5 +80,15 @@ def detail(request, given_uri=''):
                 breadcrumb += '<a href="' + uriPart + 'uridetail.html">' + requested[i] + '</a>' + ' / '
             else:
                 breadcrumb += requested[i] + ' / '
-                
-        return render_to_response('uriresolve/detail.html', { 'given_uri': resolveme[0], 'breadcrumbs': breadcrumb })
+        
+        # If this is a resource type registry, use a different template
+        if given_uri[len(given_uri)-4:] == 'type' and len(given_uri.split('/')) == 2:
+            # Find all the resource types that are defined in this guy's name authority
+            authorityName = given_uri.split('/')[0]
+            authority = name_authority.objects.get(name=authorityName)
+            types = resource_type.objects.filter(name_authority=authority)
+            
+            # Render the registry details page
+            return render_to_response('uriresolve/registrydetail.html', { 'given_uri': resolveme[0], 'breadcrumbs': breadcrumb, 'resource_types': types })
+        else:
+            return render_to_response('uriresolve/detail.html', { 'given_uri': resolveme[0], 'breadcrumbs': breadcrumb })
