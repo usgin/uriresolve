@@ -5,6 +5,8 @@ urlpatterns = patterns('',
     (r'^$', 'uriresolve.views.detail'),
     (r'^uridetail\.html$', 'uriresolve.views.detail'),
     (r'^index\.html$', 'uriresolve.views.index'),
+    (r'^(?P<authority_name>.+)/type/json$', 'uriresolve.views.jsonTypesByAuthority'),
     (r'^(?P<given_uri>.+)/uridetail\.html$', 'uriresolve.views.detail'),
-    (r'^(?P<given_uri>.+)$', 'uriresolve.views.resolver'),    
+    (r'^(?P<given_uri>.+)$', 'uriresolve.views.resolver'),
+    
 )

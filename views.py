@@ -4,6 +4,7 @@ from django.http import HttpResponse, Http404
 from django.shortcuts import get_list_or_404, render_to_response
 from django.template import Context, loader
 from django.db.models import Q
+from django.core import serializers
 
 def index(request):
     # Show a listing of URIs available on this server
@@ -92,3 +93,10 @@ def detail(request, given_uri=''):
             return render_to_response('uriresolve/registrydetail.html', { 'given_uri': resolveme[0], 'breadcrumbs': breadcrumb, 'resource_types': types })
         else:
             return render_to_response('uriresolve/detail.html', { 'given_uri': resolveme[0], 'breadcrumbs': breadcrumb })
+            
+def jsonTypesByAuthority(request, authority_name):
+    authority = name_authority.objects.get(name=authority_name)
+    result = serializers.serialize('json', resource_type.objects.filter(name_authority = authority))
+    return HttpResponse(result, mimetype='application/json')
+    # return HttpResponse(nameAuthorityId)
+    
