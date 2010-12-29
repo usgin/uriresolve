@@ -33,7 +33,8 @@ h1 span {
 table { 
 	border:none; 
 	border-collapse: 
-	collapse; width:50%;
+	collapse; 
+	width:50%;
 }
 
 td, th { 
@@ -63,6 +64,10 @@ th.colhead {
 
 .info ol li { 
 	font-family: monospace; 
+}
+
+table.registry {
+	width: auto;
 }
 
 #summary { 
