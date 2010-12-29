@@ -1,11 +1,18 @@
 from models import *
 from django.contrib import admin
+from django.conf import settings
 
 class acceptMappingInline(admin.TabularInline):
     model = accept_mapping
     extra = 0
 
 class redirectionAdmin(admin.ModelAdmin):
+    class Media:
+        js = (
+            'http://code.jquery.com/jquery-1.4.4.min.js',
+            settings.MEDIA_URL + 'uriresolve/js/resourceTypeControl.js',
+        )
+        
     list_display = ('label', 'uri_link')
     list_filter = ('name_authority',)
     
