@@ -15,6 +15,7 @@ class redirectionAdmin(admin.ModelAdmin):
         
     list_display = ('label', 'uri_link')
     list_filter = ('name_authority',)
+    search_fields = ('label', 'uri_string')
     
     fieldsets = [
         ('Basic Information', {
@@ -89,12 +90,22 @@ class resourceTypeAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         obj.save()
         
-        # Need to create a redirection for this resource type
+        # Need to create a redirection for this resource type in the name authority's registry (/uri-gin/authority/type/resource_type)
         r = redirection(
             label='Resource Type: ' + obj.label + ' (' + obj.name_authority.name.upper() + ')',
             description='Default representation for the ' + obj.label + ' resource type defined by the ' + obj.name_authority.name.upper() + ' name authority.',
             name_authority=obj.name_authority,
             uri_string='/uri-gin/' + obj.name_authority.name + '/type/' + obj.token + '/',
+            url_string='http://' + request.META['SERVER_NAME'] + '/uri-gin/' + obj.name_authority.name + '/type/' + obj.token + '/uridetail.html'
+        )
+        r.save()
+        
+        # Also need to create a redirection for this resource type that catches the /uri-gin/authority/resource_type
+        r = redirection(
+            label='Resource Type Pointer: ' + obj.label + ' (' + obj.name_authority.name.upper() + ')',
+            description = '',
+            name_authority=obj.name_authority,
+            uri_string='/uri-gin/' + obj.name_authority.name + '/' + obj.token + '/',
             url_string='http://' + request.META['SERVER_NAME'] + '/uri-gin/' + obj.name_authority.name + '/type/' + obj.token + '/uridetail.html'
         )
         r.save()
