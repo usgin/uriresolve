@@ -78,7 +78,8 @@ def detail(request, given_uri=''):
             
             # If a URI for this part has been created, link it, otherwise, just text.
             if len(match) !=0:
-                breadcrumb += '<a href="' + uriPart + 'uridetail.html">' + requested[i] + '</a>' + ' / '
+                #breadcrumb += '<a href="' + uriPart + 'uridetail.html">' + requested[i] + '</a>' + ' / '
+                breadcrumb += '<a href="' + uriPart + '">' + requested[i] + '</a>' + ' / '
             else:
                 breadcrumb += requested[i] + ' / '
         
