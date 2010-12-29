@@ -66,8 +66,34 @@ th.colhead {
 	font-family: monospace; 
 }
 
-table.registry {
+table.fullwidth {
 	width: auto;
+}
+
+.right-sidebar {
+	float: right;
+	border: 1px solid #ddd;
+	margin-top: -1px;
+	/*margin-right: -1px;*/
+	margin-left: 20px;
+	padding: 10px 5px;
+	width: 260px;
+}
+
+.right-sidebar h3 {
+	text-align: center;
+}
+
+.right-sidebar table th, td {
+	text-align: left;
+}
+
+.footer {
+	clear:both;
+}
+
+.footer div {
+	text-align: center;
 }
 
 #summary { 
@@ -77,4 +103,12 @@ table.registry {
 #explanation { 
 	background:#eee; 
 	border-bottom: 0px none; 
+}
+
+#uri_explanation {
+	width:65%;
+}
+
+#uri_explanation td{
+	text-align: justify;
 }

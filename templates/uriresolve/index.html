@@ -2,35 +2,92 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-  <title>Available Resources</title>
+  <title>USGIN URI Redirection Engine</title>
   <meta name="robots" content="NONE,NOARCHIVE" />
   <link rel="stylesheet" type="text/css" href="/media/uriresolve/css/detail.css" />
 </head>
 <body>
-  <div id="summary">
-    <h1>Available Resources</h1>
+  <div id="summary" >
+    <img src="http://lab.usgin.org/sites/all/themes/cti_flex/logo.png" style="float:left; padding-right:20px;" />
+    <br />
+    <h1 style="position:relative; top:15%; margin-bottom:0;">USGIN URI Redirection Engine</h1>
+    <br />
   </div>
-  {% for given_uri in redirection_list %}
+  
+  <div class="right-sidebar info">
+    <h3>Other Resources</h3>
+    <br />
+    <table class="fullwidth">
+      <tr>
+        <th><a href="http://lab.usgin.org">USGIN Lab</a></th>				
+      </tr>
+      <tr>
+        <td>Documentation, blogs, and tips for building USGIN compliant systems</td>
+      </tr>
+      <tr>
+        <td><br /></td>
+      </tr>
+      <tr>
+        <th><a href="/uri-gin/">USGIN URI Scheme</a></th>				
+      </tr>
+      <tr>
+        <td>What is this thing supposed to do?</td>
+      </tr>
+      <tr>
+        <td><br /></td>
+      </tr>
+      <tr>
+        <th><a href="/admin/">Engine Administration</a></th>				
+      </tr>
+      <tr>
+        <td>Log in to make changes to the redirection engine.</td>
+      </tr>
+    </table>
+  </div>
   <div class="info">
-	<table>
-		<tr>
-			<th><strong>Resource Label:</strong></td>
-			<td><strong>{{ given_uri.label }}</strong></td>
-		</tr>		
-		<tr>
-			<th>Resource Description:</td>
-			<td>{{ given_uri.description|safe }}</td>
-		</tr>
-		<tr>
-			<th>Resource URI:</td>
-			<td><a href="{{ given_uri.uri_string }}">{{ given_uri.uri_string }}</a></td>
-		</tr>
-		<tr>
-			<th>Resolve-To URL:</td>
-			<td><a href="{{ given_uri.url_string }}">{{ given_uri.url_string }}</a></td>
-		</tr>
-	</table>
+    <p style="text-align: justify;">
+      The <a href="http://lab.usgin.org/node/315">USGIN URI Scheme</a> outlines a formal method for constructing useful identifiers for both information and non-information resources. This redirection engine targets an important design criteria: to make the URIs dereferenceable. This is accomplished by redirecting requests for a specific URI to another URL, where some representation of the resource can be found.
+    </p>
   </div>
-  {% endfor %}
+  <div class="explanation">
+    <p>
+      Summary of URI syntax: <strong>http: //</strong> <em>uriHost</em> <strong>/uri_gin/</strong> <em>nameAuthority</em> <strong>/</strong> <em>resourceType</em> <strong>/</strong> <em>resourceSpecificString</em>
+    </p>
+  </div>
+  <div class="explanation">
+    <p>
+      Explanation of URI Components:
+    </p>
+    <table id="uri_explanation">
+      <tr>
+        <th>uriHost:</th>
+        <td>The intention of this segment of the URI is to specify a host system on the internet that will de-reference the following identifier. This segment identifies a host server via the DNS registry, and not considered part of the USGIN resource identifier for string comparisons of identifier equivalence.</td>
+      </tr>
+      <tr>
+        <th>nameAuthority:</th>
+        <td>A sequence of characters that identifies the naming authority for the identified resource. The name authority is the organization responsible for the stewardship of the resource identifier.</td>
+      </tr>
+      <tr>
+        <th>resourceType:</th>
+        <td>A token that indicates the type of resource being identified. Each name authority is responsible for maintaining a registry of supported resource types for that organization.</d>
+      </tr>
+      <tr>
+        <th>resourceSpecificString:</th>
+        <td>A string that identifies a particular resource, and which may have syntax specially scoped for a particular resource type.</td>
+      </tr>
+    </table>
+  </div>
+  <div class="info footer">
+    <table class="fullwidth" style="margin-left:auto; margin-right:auto;">
+      <tr>
+        <th>For further details on the USGIN URI Scheme:</th>
+        <td style="vertical-align:middle;"><a href="http://lab.usgin.org/node/315">USGIN URI recommendations</a></td>
+      </tr>
+    </table>
+    <br />
+    <div>
+      <a href="http://usgin.org">U.S. Geoscience Information Network</a> | Copyright © <a href="http://www.azgs.az.gov">Arizona Geological Survey</a>, 2010
+    </div>
+    
 </body>
 </html>
