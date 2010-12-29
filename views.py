@@ -2,7 +2,7 @@ from uriresolve.models import *
 from uriresolve.utils import HttpResponseSeeOtherRedirect
 from django.http import HttpResponse, Http404
 from django.shortcuts import get_list_or_404, render_to_response
-from django.template import Context, loader
+from django.template import RequestContext
 from django.db.models import Q
 from django.core import serializers
 
@@ -11,7 +11,8 @@ def index(request):
     listing = redirection.objects.all()
     return render_to_response(
         'uriresolve/index.html',
-        { 'redirection_list': listing, }
+        { 'redirection_list': listing, }, 
+        context_instance=RequestContext(request)
     )
     
 def resolver(request, given_uri):
