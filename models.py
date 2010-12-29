@@ -165,7 +165,8 @@ class name_authority(models.Model):
     name = models.CharField(
         max_length=100, 
         verbose_name='Name Authority', 
-        help_text='A sequence of characters that identifies the naming authority for the identified resource.'
+        help_text='A sequence of characters that identifies the naming authority for the identified resource.',
+        unique=True,
     )
     
     def __unicode__(self):
@@ -198,4 +199,4 @@ class resource_type(models.Model):
     )
     
     def __unicode__(self):
-        return self.name_authority.name + ': ' + self.label    
+        return self.name_authority.name + ': ' + self.label
