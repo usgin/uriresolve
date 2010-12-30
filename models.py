@@ -84,6 +84,7 @@ class redirection(models.Model):
     )
     
     url_string = models.URLField(
+        max_length=2000,
         blank=True,
         verbose_name = 'URL',
         help_text='This is a URL to which a direct match of this URI should be resolved'
