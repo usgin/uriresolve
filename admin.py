@@ -113,4 +113,4 @@ class resourceTypeAdmin(admin.ModelAdmin):
 admin.site.register(redirection, redirectionAdmin)
 admin.site.register(name_authority, nameAuthorityAdmin)
 admin.site.register(resource_type, resourceTypeAdmin)
-admin.site.register(accept_mapping)
+#admin.site.register(accept_mapping)
