@@ -4,7 +4,7 @@ from django.conf import settings
 
 class acceptMappingInline(admin.TabularInline):
     model = accept_mapping
-    extra = 0
+    extra = 2
 
 class redirectionAdmin(admin.ModelAdmin):
     class Media:
