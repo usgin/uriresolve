@@ -15,7 +15,7 @@ RESOURCE_TYPE_CHOICES = (
     ('document', 'Document'),
 )
 
-class redirection(models.Model):
+class rewrite_rule(models.Model):
     class Meta:
         ordering = ['label']
 
@@ -47,29 +47,10 @@ class redirection(models.Model):
         null=True
     )
         
-    resource_specific_string = models.CharField(
-        max_length=100, 
-        verbose_name='Resource Specific String', 
+    pattern = models.CharField(
+        max_length=1000, 
         blank=True, 
-        help_text='A string that may have syntax specially scoped for a particular resource type.'
-    )
-    
-    representation_part = models.CharField(
-        max_length=100, 
-        verbose_name='Representation Part', 
-        blank=True, 
-        help_text='Intended to identify a representation of the preceding resource part.'
-    )
-#---------------------------------------------------
-#---------------------------------------------------
-
-#---------------------------------------------------
-# Pattern Matching vs. Straight Redirection
-#---------------------------------------------------
-    is_pattern = models.BooleanField(
-        default=False,
-        verbose_name='Use URI as a pattern',
-        help_text='When a URI is used as a pattern, characters entered after the formal URI will be appended to the redirection URL.'
+        help_text='Regular Expression for this URI to capture.'
     )
 #---------------------------------------------------
 #---------------------------------------------------
@@ -77,17 +58,17 @@ class redirection(models.Model):
 #---------------------------------------------------
 # URI > URL Mapping  
 #---------------------------------------------------  
-    uri_string = models.CharField(
+    uri_expression = models.CharField(
         max_length=255, 
         blank=True, 
         help_text='This is the URI representing a resource'
     )
     
-    url_string = models.URLField(
+    url_string = models.CharField(
         max_length=2000,
         blank=True,
         verbose_name = 'URL',
-        help_text='This is a URL to which a direct match of this URI should be resolved'
+        help_text='This is a URL to which a match of this URI should be resolved'
     )
 #---------------------------------------------------
 #---------------------------------------------------
@@ -101,14 +82,9 @@ class redirection(models.Model):
         blank=True, 
         null=True
     )
-    
-    def uri_link(self):
-        return '<a href=' + self.uri_string + '>' + self.uri_string + '</a>'
-    uri_link.allow_tags = True
-    uri_link.short_description = 'URI'
-    
+      
     def __unicode__(self):
-        return self.uri_string
+        return self.uri_expression
 
 #---------------------------------------------------
 #---------------------------------------------------
@@ -144,7 +120,7 @@ class accept_mapping(models.Model):
         verbose_name = 'Content Negotiation'
         verbose_name_plural = 'Content Negotiation'
         
-    redirection = models.ForeignKey('redirection')
+    rewrite_rule = models.ForeignKey('rewrite_rule')
     representation_type = models.ForeignKey(
         'representation_type',
         verbose_name = 'MIME Type'
