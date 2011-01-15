@@ -47,7 +47,7 @@ class rewrite_ruleAdmin(admin.ModelAdmin):
         
         # Join the elements together, and append a / if there is no . in the string that means the URI points
         #  at an information resource (that is, at a file directly)
-        s = '^/uri-gin/' + '/'.join(uri_elements) + '$'
+        s = '^' + '/'.join(uri_elements) + '$'
             
         obj.uri_expression = s
         obj.save()
