@@ -50,7 +50,7 @@ class rewrite_rule(models.Model):
     pattern = models.CharField(
         max_length=1000, 
         blank=True, 
-        help_text='Regular Expression for this URI to capture.'
+        help_text='Regular Expression for this URI to capture. See http://docs.python.org/release/2.5.2/lib/re-syntax.html for syntax guidelines.'
     )
 #---------------------------------------------------
 #---------------------------------------------------
