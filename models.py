@@ -18,7 +18,9 @@ RESOURCE_TYPE_CHOICES = (
 class rewrite_rule(models.Model):
     class Meta:
         ordering = ['label']
-
+        verbose_name = 'Rewrite Rule'
+        verbose_name_plural = 'Rewrite Rules'
+        
 #---------------------------------------------------
 # URI Metadata
 #---------------------------------------------------
