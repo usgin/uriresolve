@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-  <title>Resource details for {{ given_uri.uri_string }}</title>
+  <title>Resource details for {{ given_uri.label }}</title>
   <meta name="robots" content="NONE,NOARCHIVE" />
   <link rel="stylesheet" type="text/css" href="/media/uriresolve/css/detail.css" /> 
 </head>
@@ -13,21 +13,24 @@
   <div class="info">
 	<table>
 		<tr>
-			<th>Resource URI:</td>
+			<th>Resource URI:</th>
 			<!--<td><strong>{{ given_uri.uri_string }}</strong></td>-->
 			<td><strong>{{ breadcrumbs|safe }}</strong></td>
 		</tr>
 		<tr>
-			<th>Resource Label:</td>
+			<th>Resource Label:</th>
 			<td>{{ given_uri.label }}</td>
 		</tr>
 		<tr>
-			<th>Resource Description:</td>
+			<th>Resource Description:</th>
 			<td>{{ given_uri.description|safe }}</td>
 		</tr>
+    <tr>
+      <th>RegEx Pattern:</th>
+      <td>{{ given_uri.uri_expression }}</td>
 		<tr>
-			<th>Resolve-To URL:</td>
-			<td><a href="{{ given_uri.url_string }}">{{ given_uri.url_string }}</a></td>
+			<th>Resolve-To URL:</th>
+			<td>{{ given_uri.url_string }}</td>
 		</tr>
 	</table>
   </div>

@@ -10,11 +10,42 @@ import re
 def resolver(request, given_uri):
     # return HttpResponse('Resolver: ' + given_uri)
     rule = findMatchingRewriteRule(given_uri)
+    if rule == None:
+        raise Http404
+        
     return redirect(rule, given_uri)
                 
 def description(request, given_uri=''):
-    return HttpResponse('Description: ' + given_uri)
-            
+    # Handle the case for the uri-gin/ URI - different template
+    if given_uri == '':
+        return render_to_response('uriresolve/index.html', {}, context_instance=RequestContext(request))
+        
+    #return HttpResponse('Description: ' + given_uri)
+    
+    # Find the matching rule
+    rule = findMatchingRewriteRule(given_uri)
+    if rule == None:
+        raise Http404
+        
+    # Build Breadcrumbs
+    requested = given_uri.split('/')
+    noOfParts = len(requested)
+    breadcrumb = '/ <a href="/uri-gin/uri-description/">uri-gin</a> / '
+    uriPart = ''
+    
+    for i in range(noOfParts):
+        if requested[i] == '':
+            continue
+        
+        uriPart += requested[i] + '/'
+        thisRule = findMatchingRewriteRule(uriPart)
+        if thisRule == None:
+            breadcrumb += requested[i] + ' / '
+        else:
+            breadcrumb += '<a href="/uri-gin/' + uriPart + 'uri-description/">' + requested[i] + '</a> / '
+    
+    return render_to_response('uriresolve/detail.html', { 'given_uri': rule, 'breadcrumbs': breadcrumb })
+    
 def jsonTypesByAuthority(request, authority_name):
     authority = name_authority.objects.get(name=authority_name)
     result = serializers.serialize('json', resource_type.objects.filter(name_authority = authority))

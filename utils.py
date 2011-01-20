@@ -18,8 +18,8 @@ def findMatchingRewriteRule(given_uri):
             # Got a match
             return rule
     
-    # If there were no matches, 404
-    raise Http404
+    # If there were no matches, return None
+    return None
     
 class redirect(HttpResponseSeeOtherRedirect):
     def __init__(self, rule, given_uri):
