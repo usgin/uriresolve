@@ -55,57 +55,53 @@ class rewrite_ruleAdmin(admin.ModelAdmin):
 class nameAuthorityAdmin(admin.ModelAdmin):
     fields = ('name',)
     
-    # def save_model(self, request, obj, form, change):
-        # obj.name = obj.name.lower()
-        # obj.save()
+    def save_model(self, request, obj, form, change):
+        obj.name = obj.name.lower()
+        obj.save()
         
-        # # Need to create a rewrite_rule for this Name Authority
-        # r = rewrite_rule(
-            # label=obj.name.upper() + ' Name Authority', 
-            # description='Default representation for the ' + obj.name.upper() + ' name authority.',
-            # name_authority=obj,
-            # uri_string='/uri-gin/' + obj.name + '/',
-            # url_string='http://' + request.META['SERVER_NAME'] + '/uri-gin/' + obj.name + '/uridetail.html'
-        # )
-        # r.save()
+        # Need to create a rewrite_rule for this Name Authority
+        r = rewrite_rule(
+            label=obj.name.upper() + ' Name Authority', 
+            description='Default representation for the ' + obj.name.upper() + ' name authority.',
+            name_authority=obj,
+            uri_expression='^' + obj.name + '/?$',
+            url_string='/uri-gin/' + obj.name + '/uri-description/'
+        )
+        # Check to see if it is already there...
+        if len(rewrite_rule.objects.filter(uri_expression = r.uri_expression)) == 0:
+            r.save()
         
-        # # Need to create a rewrite_rule for this Name Authority's resource types
-        # r = rewrite_rule(
-            # label=obj.name.upper() + ' Resource Types', 
-            # description='Default representation for the resource type registry defined by the ' + obj.name.upper() + ' name authority.',
-            # name_authority=obj,
-            # uri_pattern='/uri-gin/' + obj.name + '/type/',
-            # url_string='http://' + request.META['SERVER_NAME'] + '/uri-gin/' + obj.name + '/type/uridetail.html'
-        # )
-        # r.save()
+        # Need to create a rewrite_rule for this Name Authority's resource types
+        r = rewrite_rule(
+            label=obj.name.upper() + ' Resource Types', 
+            description='Default representation for the resource type registry defined by the ' + obj.name.upper() + ' name authority.',
+            name_authority=obj,
+            uri_expression='^' + obj.name + '/type/?$',
+            url_string='/uri-gin/' + obj.name + '/type/uri-description/'
+        )
+        # Check to see if it is already there...
+        if len(rewrite_rule.objects.filter(uri_expression = r.uri_expression)) == 0:
+            r.save()
 
 class resourceTypeAdmin(admin.ModelAdmin):
     list_filter = ('name_authority',)
     
     fields = ('name_authority', 'label', 'description', 'token',)
     
-    # def save_model(self, request, obj, form, change):
-        # obj.save()
+    def save_model(self, request, obj, form, change):
+        obj.save()
         
-        # # Need to create a rewrite_rule for this resource type in the name authority's registry (/uri-gin/authority/type/resource_type)
-        # r = rewrite_rule(
-            # label='Resource Type: ' + obj.label + ' (' + obj.name_authority.name.upper() + ')',
-            # description='Default representation for the ' + obj.label + ' resource type defined by the ' + obj.name_authority.name.upper() + ' name authority.',
-            # name_authority=obj.name_authority,
-            # uri_pattern='/uri-gin/' + obj.name_authority.name + '/type/' + obj.token + '/',
-            # url_string='http://' + request.META['SERVER_NAME'] + '/uri-gin/' + obj.name_authority.name + '/type/' + obj.token + '/uridetail.html'
-        # )
-        # r.save()
-        
-        # # Also need to create a rewrite_rule for this resource type that catches the /uri-gin/authority/resource_type
-        # r = rewrite_rule(
-            # label='Resource Type Pointer: ' + obj.label + ' (' + obj.name_authority.name.upper() + ')',
-            # description = '',
-            # name_authority=obj.name_authority,
-            # uri_string='/uri-gin/' + obj.name_authority.name + '/' + obj.token + '/',
-            # url_string='http://' + request.META['SERVER_NAME'] + '/uri-gin/' + obj.name_authority.name + '/type/' + obj.token + '/uridetail.html'
-        # )
-        # r.save()
+        # Need to create a rewrite_rule for this resource type that catches the /uri-gin/authority/resource_type
+        r = rewrite_rule(
+            label='Resource Type Pointer: ' + obj.label + ' (' + obj.name_authority.name.upper() + ')',
+            description = 'Default representation for the resource type: ' + obj.label + ', as defined by the ' + obj.name_authority.name.upper() + ' name authority.',
+            name_authority=obj.name_authority,
+            uri_expression='^' + obj.name_authority.name + '/' + obj.token + '/?$',
+            url_string='/uri-gin/' + obj.name_authority.name + '/' + obj.token + '/uri-description/'
+        )
+        # Check to see if it is already there...
+        if len(rewrite_rule.objects.filter(uri_expression = r.uri_expression)) == 0:
+            r.save()
         
 admin.site.register(rewrite_rule, rewrite_ruleAdmin)
 admin.site.register(name_authority, nameAuthorityAdmin)

@@ -43,8 +43,18 @@ def description(request, given_uri=''):
             breadcrumb += requested[i] + ' / '
         else:
             breadcrumb += '<a href="/uri-gin/' + uriPart + 'uri-description/">' + requested[i] + '</a> / '
+    # If this is a resource type registry, use a different template
     
-    return render_to_response('uriresolve/detail.html', { 'given_uri': rule, 'breadcrumbs': breadcrumb })
+    if given_uri[len(given_uri)-5:] == 'type/' and len(given_uri.split('/')) == 3:
+        # Find all the resource types that are defined in this guy's name authority
+        authorityName = given_uri.split('/')[0]
+        authority = name_authority.objects.get(name=authorityName)
+        types = resource_type.objects.filter(name_authority=authority)
+        
+        # Render the registry details page
+        return render_to_response('uriresolve/registrydetail.html', { 'given_uri': rule, 'breadcrumbs': breadcrumb, 'resource_types': types })
+    else:
+        return render_to_response('uriresolve/detail.html', { 'given_uri': rule, 'breadcrumbs': breadcrumb })
     
 def jsonTypesByAuthority(request, authority_name):
     authority = name_authority.objects.get(name=authority_name)
