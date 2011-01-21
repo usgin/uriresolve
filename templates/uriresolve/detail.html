@@ -11,29 +11,39 @@
     <h1>Resource details for "{{ given_uri.label }}"</h1>
   </div>
   <div class="info">
-	<table>
-		<tr>
-			<th>Resource URI:</th>
-			<!--<td><strong>{{ given_uri.uri_string }}</strong></td>-->
-			<td><strong>{{ breadcrumbs|safe }}</strong></td>
-		</tr>
-		<tr>
-			<th>Resource Label:</th>
-			<td>{{ given_uri.label }}</td>
-		</tr>
-		<tr>
-			<th>Resource Description:</th>
-			<td>{{ given_uri.description|safe }}</td>
-		</tr>
-    <tr>
-      <th>RegEx Pattern:</th>
-      <td>{{ given_uri.uri_expression }}</td>
-    </tr>
-		<tr>
-			<th>Resolve-To URL:</th>
-			<td>{{ given_uri.url_string }}</td>
-		</tr>
-	</table>
+    <table>
+      <tr>
+        <th>Resource URI:</th>
+        <!--<td><strong>{{ given_uri.uri_string }}</strong></td>-->
+        <td><strong>{{ breadcrumbs|safe }}</strong></td>
+      </tr>
+      <tr>
+        <th>Resource Label:</th>
+        <td>{{ given_uri.label }}</td>
+      </tr>
+      <tr>
+        <th>Resource Description:</th>
+        <td>{{ given_uri.description|safe }}</td>
+      </tr>
+      <tr>
+        <th>RegEx Pattern:</th>
+        <td>{{ given_uri.uri_expression }}</td>
+      </tr>
+    </table>
+  </div>
+  <div class="info">
+    <table class="fullwidth">
+      <tr>
+        <th class="colhead">Media Type</th>
+        <th class="colhead">Redirect To:</th>
+      </tr>
+    {% for thisMapping in mappings %}
+      <tr>
+        <td>{{ thisMapping.representation_type }}</td>
+        <td>{{ thisMapping.redirect_to }}</td>
+      </tr>
+    {% endfor %}
+    </table>
   </div>
 </body>
 </html>

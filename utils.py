@@ -22,14 +22,9 @@ def findMatchingRewriteRule(given_uri):
     return None
     
 class redirect(HttpResponseSeeOtherRedirect):
-    def __init__(self, rule, given_uri, accept_mapping=None):
+    def __init__(self, rule, given_uri, accept_mapping):
         match = re.match(rule.uri_expression, given_uri)
-        
-        redirect_to = ''
-        if accept_mapping == None:
-            redirect_to = rule.url_string
-        else:
-            redirect_to = accept_mapping.redirect_to
+        redirect_to = accept_mapping.redirect_to
                 
         if match == None:
             raise Http404

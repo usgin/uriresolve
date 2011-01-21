@@ -13,7 +13,7 @@ class rewrite_ruleAdmin(admin.ModelAdmin):
             settings.MEDIA_URL + 'uriresolve/js/resourceTypeControl.js',
         )
         
-    list_display = ('label', 'uri_expression', 'url_string')
+    list_display = ('label', 'uri_expression')
     list_filter = ('name_authority',)
     search_fields = ('label', 'uri_expression')
     
@@ -23,9 +23,6 @@ class rewrite_ruleAdmin(admin.ModelAdmin):
         }),
         ('URI Components', {
             'fields': ['name_authority', 'resource_type', 'pattern']
-        }),
-        ('URI > URL Mapping', {
-            'fields': [('url_string',)]
         }),
     ]
     
@@ -45,8 +42,7 @@ class rewrite_ruleAdmin(admin.ModelAdmin):
         else:
             uri_elements.append('')
         
-        # Join the elements together, and append a / if there is no . in the string that means the URI points
-        #  at an information resource (that is, at a file directly)
+        # Join the elements together
         s = '^' + '/'.join(uri_elements) + '$'
             
         obj.uri_expression = s
@@ -64,25 +60,39 @@ class nameAuthorityAdmin(admin.ModelAdmin):
             label=obj.name.upper() + ' Name Authority', 
             description='Default representation for the ' + obj.name.upper() + ' name authority.',
             name_authority=obj,
-            uri_expression='^' + obj.name + '/?$',
-            url_string='/uri-gin/' + obj.name + '/uri-description/'
+            uri_expression='^' + obj.name + '/?$'
         )
         # Check to see if it is already there...
         if len(rewrite_rule.objects.filter(uri_expression = r.uri_expression)) == 0:
             r.save()
+            
+            # Create the Accept-Mapping for this rewrite_rule
+            am = accept_mapping(
+                rewrite_rule=r,
+                representation_type=representation_type.objects.get(pk=24), # This is the pk for text/html .html
+                redirect_to='/uri-gin/' + obj.name + '/uri-description/'
+            )
+            am.save()
         
         # Need to create a rewrite_rule for this Name Authority's resource types
         r = rewrite_rule(
             label=obj.name.upper() + ' Resource Types', 
             description='Default representation for the resource type registry defined by the ' + obj.name.upper() + ' name authority.',
             name_authority=obj,
-            uri_expression='^' + obj.name + '/type/?$',
-            url_string='/uri-gin/' + obj.name + '/type/uri-description/'
+            uri_expression='^' + obj.name + '/type/?$'
         )
         # Check to see if it is already there...
         if len(rewrite_rule.objects.filter(uri_expression = r.uri_expression)) == 0:
             r.save()
-
+            
+            # Create the Accept-Mapping for this rewrite_rule
+            am = accept_mapping(
+                rewrite_rule=r,
+                representation_type=representation_type.objects.get(pk=24), # This is the pk for text/html .html
+                redirect_to='/uri-gin/' + obj.name + '/type/uri-description/'
+            )
+            am.save()
+            
 class resourceTypeAdmin(admin.ModelAdmin):
     list_filter = ('name_authority',)
     
@@ -96,14 +106,22 @@ class resourceTypeAdmin(admin.ModelAdmin):
             label='Resource Type Pointer: ' + obj.label + ' (' + obj.name_authority.name.upper() + ')',
             description = 'Default representation for the resource type: ' + obj.label + ', as defined by the ' + obj.name_authority.name.upper() + ' name authority.',
             name_authority=obj.name_authority,
-            uri_expression='^' + obj.name_authority.name + '/' + obj.token + '/?$',
-            url_string='/uri-gin/' + obj.name_authority.name + '/' + obj.token + '/uri-description/'
+            resource_type=obj,
+            uri_expression='^' + obj.name_authority.name + '/' + obj.token + '/?$'
         )
         # Check to see if it is already there...
         if len(rewrite_rule.objects.filter(uri_expression = r.uri_expression)) == 0:
             r.save()
-        
+            
+            # Create the Accept-Mapping for this rewrite_rule
+            am = accept_mapping(
+                rewrite_rule=r,
+                representation_type=representation_type.objects.get(pk=24), # This is the pk for text/html .html
+                redirect_to='/uri-gin/' + obj.name_authority.name + '/' + obj.token + '/uri-description/'
+            )
+            am.save()
+            
 admin.site.register(rewrite_rule, rewrite_ruleAdmin)
 admin.site.register(name_authority, nameAuthorityAdmin)
 admin.site.register(resource_type, resourceTypeAdmin)
-#admin.site.register(accept_mapping)
+admin.site.register(representation_type)

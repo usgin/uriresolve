@@ -29,26 +29,23 @@
       <th>RegEx Pattern:</th>
       <td>{{ given_uri.uri_expression }}</td>
     </tr>
-		<tr>
-			<th>Resolve-To URL:</td>
-			<td><a href="{{ given_uri.url_string }}">{{ given_uri.url_string }}</a></td>
-		</tr>
 	</table>
   </div>
   <div class="info">
-	<table class="fullwidth">
-		<tr>
-			<th class="colhead">Resource Type</th>
-			<th class="colhead">Description</th>
-			<th class="colhead">Token</th>
-		</tr>
-	{% for type in resource_types %}
-		<tr>
-			<td><a href="/uri-gin/{{ type.name_authority.name }}/{{ type.token }}/">{{ type.label }}</a></td>
-			<td>{{ type.description }}</td>
-			<td>{{ type.token }}</td>
-		</tr>
-	{% endfor %}
-	</table>
+    <table class="fullwidth">
+      <tr>
+        <th class="colhead">Resource Type</th>
+        <th class="colhead">Description</th>
+        <th class="colhead">Token</th>
+      </tr>
+    {% for type in resource_types %}
+      <tr>
+        <td><a href="/uri-gin/{{ type.name_authority.name }}/{{ type.token }}/">{{ type.label }}</a></td>
+        <td>{{ type.description }}</td>
+        <td>{{ type.token }}</td>
+      </tr>
+    {% endfor %}
+    </table>
+  </div>
 </body>
 </html>

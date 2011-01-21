@@ -39,8 +39,8 @@ def resolver(request, given_uri):
                 #return HttpResponse('Resolver: ' + mapping[0].redirect_to)
                 return redirect(rule, given_uri, mapping[0])
     else:
-        # There were no accept mappings defined
-        return redirect(rule, given_uri)
+        # There were no accept mappings defined. This is a misconfigured rule.
+        return HttpResponseServerError('500 Error: Internal Server error - No mappings defined for this URI.')
                 
 def description(request, given_uri=''):
     if request.META['REQUEST_METHOD'] != 'GET':
@@ -84,7 +84,11 @@ def description(request, given_uri=''):
         # Render the registry details page
         return render_to_response('uriresolve/registrydetail.html', { 'given_uri': rule, 'breadcrumbs': breadcrumb, 'resource_types': types })
     else:
-        return render_to_response('uriresolve/detail.html', { 'given_uri': rule, 'breadcrumbs': breadcrumb })
+        # Find all the accept-mappings for this URI
+        mappings = accept_mapping.objects.filter(rewrite_rule=rule)
+        
+        # Render the URI details page
+        return render_to_response('uriresolve/detail.html', { 'given_uri': rule, 'breadcrumbs': breadcrumb, 'mappings': mappings })
     
 def jsonTypesByAuthority(request, authority_name):
     if request.META['REQUEST_METHOD'] != 'GET':

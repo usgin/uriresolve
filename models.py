@@ -1,20 +1,5 @@
 from django.db import models
 
-RESOURCE_TYPE_CHOICES = (
-    ('type', 'Resource Type'),
-    ('register', 'Register'),
-    ('collection', 'Collection'),
-    ('vocabulary', 'Vocabulary'),
-    ('dataset', 'Dataset'),
-    ('registry', 'Registry'),
-    ('catalog', 'Catalog'),
-    ('organization', 'Organization'),
-    ('person', 'Person'),
-    ('concept', 'Concept'),
-    ('authority', 'Naming authority'),
-    ('document', 'Document'),
-)
-
 class rewrite_rule(models.Model):
     class Meta:
         ordering = ['label']
@@ -37,7 +22,7 @@ class rewrite_rule(models.Model):
 #---------------------------------------------------
 
 #---------------------------------------------------
-# URI components
+# URI components - Use to construct USGIN URIs
 #---------------------------------------------------    
     name_authority = models.ForeignKey('name_authority', blank=True, null=True)
     
@@ -58,31 +43,22 @@ class rewrite_rule(models.Model):
 #---------------------------------------------------
 
 #---------------------------------------------------
-# URI > URL Mapping  
+# URI Expression Itself 
 #---------------------------------------------------  
     uri_expression = models.CharField(
         max_length=255, 
         blank=True, 
         help_text='This is the URI representing a resource'
     )
-    
-    url_string = models.CharField(
-        max_length=2000,
-        blank=True,
-        verbose_name = 'URL',
-        help_text='This is a URL to which a match of this URI should be resolved'
-    )
 #---------------------------------------------------
 #---------------------------------------------------
 
 #---------------------------------------------------
-# Content Negotiation (For the Future)
+# Content Negotiation
 #---------------------------------------------------
     representations = models.ManyToManyField(
         'representation_type', 
-        through='accept_mapping', 
-        blank=True, 
-        null=True
+        through='accept_mapping',
     )
       
     def __unicode__(self):
@@ -97,20 +73,15 @@ class rewrite_rule(models.Model):
 class representation_type(models.Model):
     class Meta:
         ordering = ['name']
-        verbose_name = 'Representation Type'
-        verbose_name_plural = 'Representation Types'
+        verbose_name = 'Media Type'
+        verbose_name_plural = 'Media Types'
         
     name = models.CharField(
         max_length=100,
-        verbose_name='MIME Type/Sub-Type'
     )
-    extension = models.CharField(
-        max_length=10,
-        verbose_name='File Extension'
-    )
-
+        
     def __unicode__(self):
-        return self.name + ': .' + self.extension
+        return self.name
         
 #---------------------------------------------------
 # Accept Mappings are to perform redirections
@@ -119,15 +90,18 @@ class representation_type(models.Model):
 #---------------------------------------------------
 class accept_mapping(models.Model):
     class Meta:
-        verbose_name = 'Content Negotiation'
-        verbose_name_plural = 'Content Negotiation'
+        verbose_name = 'Accept-Mapping'
+        verbose_name_plural = 'Accept-Mapping'
         
     rewrite_rule = models.ForeignKey('rewrite_rule')
     representation_type = models.ForeignKey(
         'representation_type',
-        verbose_name = 'MIME Type'
+        verbose_name = 'Media Type'
     )
-    redirect_to = models.URLField(help_text='The URL to which the specified Representation Type should resolve.')
+    redirect_to = models.CharField(
+        max_length=2000,
+        help_text='The URL to which the specified Representation Type should resolve.'
+    )
     
     def __unicode__(self):
         return self.representation_type.name
