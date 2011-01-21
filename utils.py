@@ -22,23 +22,25 @@ def findMatchingRewriteRule(given_uri):
     return None
     
 class redirect(HttpResponseSeeOtherRedirect):
-    def __init__(self, rule, given_uri):
+    def __init__(self, rule, given_uri, accept_mapping=None):
         match = re.match(rule.uri_expression, given_uri)
-        redirect_to = ''
         
+        redirect_to = ''
+        if accept_mapping == None:
+            redirect_to = rule.url_string
+        else:
+            redirect_to = accept_mapping.redirect_to
+                
         if match == None:
             raise Http404
             
-        if match.lastindex == None:
-            # This occurs if there is a direct match and no replacements. The regular expression had no capture blocks in it.
-            redirect_to = rule.url_string
-        else:
-            # There were capture groups to take into account.
-            redirection = rule.url_string
-            
+        if match.lastindex != None:            
+            # There were capture groups to take into account.            
             # Loop through each captured group and adjust the rule's URL String, replacing appropriately
             for i in range(match.lastindex):
-                redirection = re.sub('\$' + str(i + 1), match.group(i + 1), redirection)
-            redirect_to = redirection
+                redirect_to = re.sub('\$' + str(i + 1), match.group(i + 1), redirect_to)
             
         HttpResponseSeeOtherRedirect.__init__(self, redirect_to)
+        
+class HttpResponseNotAcceptable(HttpResponse):
+    status_code = 406

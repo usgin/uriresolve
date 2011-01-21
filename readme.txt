@@ -15,3 +15,7 @@ Steps:
 5. Add the following line to your patterns in your project's urls.py:
 	(r'^uri-gin/', include('uriresolve.urls')),
 6. Run 'python manage.py syncdb'
+
+Acknowledgements:
+- HTTP Accept-header parsing is accomplished using the mimeparse module:
+	http://code.google.com/p/mimeparse/
