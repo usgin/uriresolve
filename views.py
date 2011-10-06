@@ -25,7 +25,7 @@ def resolver(request, given_uri):
         
     if len(listing) > 0:
         # The rewrite rule has some Accept-Mappings. Try to match the request's accept-header
-        match = mimeparse.best_match(listing, request.META['HTTP_ACCEPT'])
+        match = mimeparse.best_match(listing, request.META.get('HTTP_ACCEPT', '*'))
         if match == '':
             # There is no suitable match. 406.
             return HttpResponseNotAcceptable('406 Error: Not Acceptable')
